@@ -39,6 +39,7 @@ module.exports = {
       backgroundColor: {
         fill: withOpacity("--bg-fill"),
         elements: withOpacity("--bg-elements"),
+        muted: withOpacity("--bg-muted"),
       },
       borderColor: {
         danger: withOpacity("--border-danger"),

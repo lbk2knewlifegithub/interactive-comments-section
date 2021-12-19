@@ -4,11 +4,15 @@ import * as fromComments from '@lbk/comments/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { CommentsRoutingModule } from './comments-routing.module';
-import { CommentComponent, CommentListComponent } from './components';
+import {
+  CommentComponent,
+  CommentListComponent,
+  ScoreComponent
+} from './components';
 import { ViewCommentsPageComponent } from './containers';
 import { CommentEffects } from './effects';
 
-const COMPONENTS = [CommentListComponent, CommentComponent];
+const COMPONENTS = [CommentListComponent, CommentComponent, ScoreComponent];
 const CONTAINERS = [ViewCommentsPageComponent];
 
 @NgModule({
