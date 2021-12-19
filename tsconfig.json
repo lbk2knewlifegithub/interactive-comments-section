@@ -19,7 +19,7 @@
     "target": "es2017",
     "module": "es2020",
     "paths": {
-      "@lbk/*": ["./src/app/*"]
+      "@lbk/*": ["./src/app/*"],
     },
     "lib": ["es2020", "dom"]
   },

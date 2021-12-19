@@ -6,8 +6,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { CommentsRoutingModule } from './comments-routing.module';
 import {
-  ButtonComponent, CommentComponent,
-  CommentListComponent, EnterCommentComponent, ScoreComponent
+  ButtonComponent,
+  CommentComponent,
+  CommentListComponent,
+  ConfirmDeleteComponent,
+  DeletePopupComponent,
+  EnterCommentComponent,
+  ScoreComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
 import { CommentEffects } from './effects';
@@ -17,7 +22,9 @@ const COMPONENTS = [
   CommentComponent,
   ScoreComponent,
   ButtonComponent,
-  EnterCommentComponent
+  EnterCommentComponent,
+  DeletePopupComponent,
+  ConfirmDeleteComponent,
 ];
 
 const CONTAINERS = [ViewCommentsPageComponent];

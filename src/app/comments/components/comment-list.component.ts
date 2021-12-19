@@ -1,5 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { User } from '@lbk/auth/models';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
 import { Comment } from '../models';
 
 @Component({
@@ -8,7 +13,7 @@ import { Comment } from '../models';
   template: `
     <div class="grid gap-4">
       <ng-container *ngFor="let comment of comments; trackBy: identifyComment">
-        <lbk-comment [username]="username" [comment]="comment"></lbk-comment>
+        <lbk-comment (delete)="delete.emit($event)" [username]="username" [comment]="comment"></lbk-comment>
       </ng-container>
     </div>
   `,
@@ -16,6 +21,7 @@ import { Comment } from '../models';
 export class CommentListComponent {
   @Input() comments!: Comment[];
   @Input() username?: string;
+  @Output() delete = new EventEmitter<number>();
 
   identifyComment(index: number, comment: Comment) {
     return comment.id;

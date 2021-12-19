@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
 import { User } from '@lbk/auth/models';
 import { Comment } from '@lbk/comments/models';
 
@@ -54,8 +60,16 @@ import { Comment } from '@lbk/comments/models';
 
           <ng-container *ngIf="you; else reply">
             <div class="flex gap-4">
-              <lbk-button name="delete"></lbk-button>
+              <!-- delete -->
+              <lbk-button
+                (click)="delete.emit(comment.id)"
+                name="delete"
+              ></lbk-button>
+              <!-- end delete -->
+
+              <!-- edit -->
               <lbk-button name="edit"></lbk-button>
+              <!-- end edit -->
             </div>
           </ng-container>
 
@@ -70,7 +84,11 @@ import { Comment } from '@lbk/comments/models';
       <!-- replies -->
       <div class="mt-4 grid gap-4 border-l-2 border-gray-200 pl-4">
         <ng-container *ngFor="let reply of comment.replies">
-          <lbk-comment [username]="username" [comment]="reply"></lbk-comment>
+          <lbk-comment
+            (delete)="delete.emit($event)"
+            [username]="username"
+            [comment]="reply"
+          ></lbk-comment>
         </ng-container>
       </div>
       <!-- end replies -->
@@ -80,6 +98,7 @@ import { Comment } from '@lbk/comments/models';
 export class CommentComponent {
   @Input() comment!: Comment;
   @Input() username?: string;
+  @Output() delete = new EventEmitter<number>();
 
   get user(): User {
     return this.comment.user;

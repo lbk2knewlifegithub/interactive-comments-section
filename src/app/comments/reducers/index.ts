@@ -1,7 +1,10 @@
 import * as fromComments from '@lbk/comments/reducers/comments.reducer';
 import * as fromRoot from '@lbk/reducers';
 import {
-  Action, combineReducers, createFeatureSelector, createSelector
+  Action,
+  combineReducers,
+  createFeatureSelector,
+  createSelector
 } from '@ngrx/store';
 
 export const commentsFeatureKey = 'comments';
@@ -31,9 +34,16 @@ export const selectCommentEntitiesState = createSelector(
   (state) => state.comments
 );
 
+
 export const {
   selectIds: selectCommentIds,
   selectEntities: selectCommentEntities,
   selectAll: selectAllComments,
   selectTotal: selectTotalComments,
 } = fromComments.adapter.getSelectors(selectCommentEntitiesState);
+
+
+export const selectDeleteId = createSelector(
+  selectCommentEntitiesState,
+  fromComments.deleteId
+);

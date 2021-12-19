@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
       type="button"
       class="font-black text-sm inline-flex gap-2 items-center {{
         textColor
-      }}  duration-150 hover:hidden"
+      }}  duration-150 hover:opacity-50"
     >
       <!-- <i class="fas fa-{{ icon }}"></i> -->
       <img [src]="src" [alt]="name" />

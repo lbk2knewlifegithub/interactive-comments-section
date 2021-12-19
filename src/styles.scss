@@ -32,7 +32,9 @@
     --bg-fill: var(--very-light-gray);
     --bg-elements: var(--white);
     --bg-muted: var(--light-gray);
+    --bg-muted-900: var(--grayish-blue);
     --bg-primary: var(--moderate-blue);
+    --bg-danger: var(--soft-red);
   }
 
   //make default form look nice
@@ -70,10 +72,18 @@ input.ng-invalid.ng-touched {
   }
 
   .btn {
-    @apply inline-block rounded-lg px-6 py-3 shadow-lg;
+    @apply inline-block uppercase text-sm tracking-wider text-white font-semibold rounded-lg px-6 py-3 shadow-lg hover:opacity-50 disabled:opacity-25;
   }
 
   .btn-primary {
-    @apply bg-primary text-white font-medium uppercase tracking-wider hover:opacity-50 disabled:opacity-25;
+    @apply bg-primary;
+  }
+
+  .btn-muted {
+    @apply bg-muted-900 tracking-wider;
+  }
+
+  .btn-danger {
+    @apply bg-danger tracking-wider;
   }
 }

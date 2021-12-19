@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +17,7 @@ import { metaReducers, ROOT_REDUCERS } from './reducers';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     AuthModule,
     CoreModule,
     StoreModule.forRoot(ROOT_REDUCERS, {

@@ -6,7 +6,17 @@ export const loadCommentsSuccess = createAction(
   props<{ comments: Comment[] }>()
 );
 
-export const loadCommentsFailure = createAction(
+export const loadCommentFailure = createAction(
   '[Comments/API] Load Comment Failure',
+  props<{ error: any }>()
+);
+
+export const deleteCommentSuccess = createAction(
+  '[Comments/API] Delete Comment Success',
+  props<{ id: number }>()
+);
+
+export const deleteCommentFailure = createAction(
+  '[Comments/API] Delete Comment Failure',
   props<{ error: any }>()
 );

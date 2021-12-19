@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Comment } from '@lbk/comments/models';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CommentsService {
@@ -11,5 +11,11 @@ export class CommentsService {
     return this._http
       .get<any>('assets/data.json')
       .pipe(map((response) => response.comments as Comment[]));
+  }
+
+
+  deleteComment(id: number): Observable<boolean> {
+    // some http call
+    return of(true);
   }
 }

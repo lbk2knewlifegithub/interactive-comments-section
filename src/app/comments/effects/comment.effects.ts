@@ -7,7 +7,7 @@ import { CommentsService } from '../services/comments.service';
 
 @Injectable()
 export class CommentEffects {
-  loadCollection$ = createEffect(() =>
+  loadComments$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.enter),
       switchMap(() =>
@@ -16,7 +16,21 @@ export class CommentEffects {
             CommentsApiActions.loadCommentsSuccess({ comments })
           ),
           catchError((error) =>
-            of(CommentsApiActions.loadCommentsFailure({ error }))
+            of(CommentsApiActions.loadCommentFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  deleteComment$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(CommentsPageActions.deleteComment),
+      switchMap(({ id }) =>
+        this._commentsService.deleteComment(id).pipe(
+          map(() => CommentsApiActions.deleteCommentSuccess({ id })),
+          catchError((error) =>
+            of(CommentsApiActions.loadCommentFailure({ error }))
           )
         )
       )
