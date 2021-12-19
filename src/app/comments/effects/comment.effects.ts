@@ -57,8 +57,40 @@ export class CommentEffects {
       ofType(CommentsPageActions.addReply),
       switchMap(({ replyDto }) =>
         this._commentsService.addReply(replyDto).pipe(
-          map(({commentId, comment}) => CommentsApiActions.addReplySuccess({ comment, commentId })),
-          catchError((error) => of(CommentsApiActions.addReplyFailure({ error })))
+          map(({ commentId, comment }) =>
+            CommentsApiActions.addReplySuccess({ comment, commentId })
+          ),
+          catchError((error) =>
+            of(CommentsApiActions.addReplyFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  upScore$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(CommentsPageActions.upScore),
+      switchMap(({ commentId }) =>
+        this._commentsService.upScore(commentId).pipe(
+          map((_) => CommentsApiActions.upScoreSuccess({ commentId })),
+          catchError((error) =>
+            of(CommentsApiActions.upScoreFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  downScore$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(CommentsPageActions.downScore),
+      switchMap(({ commentId }) =>
+        this._commentsService.downScore(commentId).pipe(
+          map((_) => CommentsApiActions.downScoreSuccess({ commentId })),
+          catchError((error) =>
+            of(CommentsApiActions.downScoreFailure({ error }))
+          )
         )
       )
     )

@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input
+  Input,
+  Output
 } from '@angular/core';
 
 @Component({
@@ -13,9 +14,9 @@ import {
       <!-- plus -->
       <button
         [disabled]="score === max"
-        (click)="add(1)"
+        (click)="up.emit()"
         type="button"
-        class="text-gray-400 px-2 disabled:opacity-20"
+        class="text-gray-400 px-2 disabled:opacity-20 hover:text-primary"
       >
         <i class="fas fa-plus"></i>
       </button>
@@ -26,9 +27,9 @@ import {
       <!-- minus -->
       <button
         [disabled]="score === min"
-        (click)="add(-1)"
+        (click)="down.emit()"
         type="button"
-        class="text-gray-400 px-2 disabled:opacity-20"
+        class="text-gray-400 px-2 disabled:opacity-20 hover:text-primary"
       >
         <i class="fas fa-minus"></i>
       </button>
@@ -40,10 +41,6 @@ export class ScoreComponent {
   @Input() score!: number;
   @Input() min = 0;
   @Input() max = 10_000;
-  @Input() scoreChange = new EventEmitter<number>();
-
-  add(value: number) {
-    this.score = Math.min(Math.max(this.score + value, this.min), this.max);
-    this.scoreChange.emit(this.score);
-  }
+  @Output() up = new EventEmitter<void>();
+  @Output() down = new EventEmitter<void>();
 }

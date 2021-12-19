@@ -46,10 +46,37 @@ export const addCommentFailure = createAction(
  */
 export const addReplySuccess = createAction(
   '[Comments/API] Add Reply Success',
-  props<{ commentId: number; comment: Comment }>()
+  props<{ commentId: number, comment: Comment }>()
 );
 
 export const addReplyFailure = createAction(
   '[Comments/API] Add Reply Failure',
+  props<{ error: any }>()
+);
+
+/**
+ * - Up Score
+ */
+export const upScoreSuccess = createAction(
+  '[Comments/API] Up Score Success',
+  props<{ commentId: number }>()
+);
+
+export const upScoreFailure = createAction(
+  '[Comments/API] Up Score Failure',
+  props<{ error: any }>()
+);
+
+
+/**
+ * - Down Score
+ */
+export const downScoreSuccess = createAction(
+  '[Comments/API] Down Score Success',
+  props<{ commentId: number }>()
+);
+
+export const downScoreFailure = createAction(
+  '[Comments/API] Down Score Failure',
   props<{ error: any }>()
 );

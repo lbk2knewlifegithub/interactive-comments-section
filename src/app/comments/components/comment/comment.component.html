@@ -34,7 +34,8 @@
 
     <div class="flex items-center justify-between">
       <!-- score -->
-      <lbk-score [score]="comment.score"></lbk-score>
+      <lbk-score  (up)="up.emit(comment.id)" (down)="down.emit(comment.id)" [score]="comment.score">
+      </lbk-score>
       <!-- end score -->
 
       <ng-container *ngIf="you; else replyButton">
@@ -65,7 +66,8 @@
   <!-- replies -->
   <div class="grid gap-4 pl-4 mt-4 border-l-2 border-gray-200">
     <ng-container *ngFor="let r of comment.replies;index as i">
-      <lbk-comment (reply)="reply.emit($event)" (delete)="delete.emit($event)" [myUser]="myUser" [comment]="r">
+      <lbk-comment (up)="up.emit($event)" (down)="down.emit($event)" (reply)="reply.emit($event)"
+        (delete)="delete.emit($event)" [myUser]="myUser" [comment]="r">
       </lbk-comment>
     </ng-container>
   </div>

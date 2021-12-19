@@ -23,3 +23,13 @@ export const addReply = createAction(
   '[Comments Page] Add Reply',
   props<{ replyDto: ReplyDto }>()
 );
+
+export const upScore = createAction(
+  '[Comments Page] Up Score ',
+  props<{ commentId: number }>()
+);
+
+export const downScore = createAction(
+  '[Comments Page] Down Score ',
+  props<{ commentId: number }>()
+);

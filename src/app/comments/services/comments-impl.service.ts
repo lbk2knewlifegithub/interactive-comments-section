@@ -21,7 +21,15 @@ export class CommentsServiceImpl implements CommentsService {
     throw new Error('Method not implemented.');
   }
 
-  addReply(replyDto: ReplyDto): Observable<Comment> {
+  addReply(
+    replyDto: ReplyDto
+  ): Observable<{ commentId: number; comment: Comment }> {
+    throw new Error('Method not implemented.');
+  }
+  upScore(commentId: number): Observable<boolean> {
+    throw new Error('Method not implemented.');
+  }
+  downScore(commentId: number): Observable<boolean> {
     throw new Error('Method not implemented.');
   }
 }

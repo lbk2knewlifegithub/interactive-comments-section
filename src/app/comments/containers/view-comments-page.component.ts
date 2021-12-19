@@ -18,6 +18,8 @@ import { CommentsPageActions } from '../actions';
         <lbk-comment-list
           (reply)="addReply($event)"
           (delete)="requestDeleteComment($event)"
+          (up)="upScore($event)"
+          (down)="downScore($event)"
           [myUser]="user"
           [comments]="(comments$ | async)!"
         ></lbk-comment-list>
@@ -53,9 +55,9 @@ export class ViewCommentsPageComponent implements OnInit {
     this.deleteId$ = _store.select(fromComments.selectDeleteId);
     this.openDeletePopup$ = this.deleteId$.pipe(map((id) => !!id));
 
-    setTimeout(() => {
-      window.scrollTo(0, document.body.scrollHeight);
-    }, 200);
+    // setTimeout(() => {
+    //   window.scrollTo(0, document.body.scrollHeight);
+    // }, 200);
   }
 
   ngOnInit(): void {
@@ -89,5 +91,13 @@ export class ViewCommentsPageComponent implements OnInit {
 
   addReply(replyDto: ReplyDto) {
     this._store.dispatch(CommentsPageActions.addReply({ replyDto }));
+  }
+
+  upScore(commentId: number) {
+    this._store.dispatch(CommentsPageActions.upScore({ commentId }));
+  }
+
+  downScore(commentId: number) {
+    this._store.dispatch(CommentsPageActions.downScore({ commentId }));
   }
 }

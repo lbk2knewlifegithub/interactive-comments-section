@@ -37,7 +37,7 @@ export class CommentsServiceFake implements CommentsService {
     //   if (tmp) return tmp;
     // }
 
-    return undefined;
+    // return undefined;
   }
 
   addComment(user: User, content: string): Observable<Comment> {
@@ -72,5 +72,12 @@ export class CommentsServiceFake implements CommentsService {
     };
 
     return of({ commentId: replyDto.toCommentId, comment });
+  }
+
+  upScore(commentId: number): Observable<boolean> {
+    return of(true);
+  }
+  downScore(commentId: number): Observable<boolean> {
+    return of(true);
   }
 }

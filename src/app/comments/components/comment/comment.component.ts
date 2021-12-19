@@ -18,6 +18,10 @@ export class CommentComponent {
   @Input() myUser!: User;
   @Output() delete = new EventEmitter<number>();
   @Output() reply = new EventEmitter<ReplyDto>();
+
+  @Output() up = new EventEmitter<number>();
+  @Output() down = new EventEmitter<number>();
+
   openReplyPanel = false;
   replyContent = '';
 
@@ -43,5 +47,4 @@ export class CommentComponent {
       toCommentId: this.comment.id,
     });
   }
-
 }

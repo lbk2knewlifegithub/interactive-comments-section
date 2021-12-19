@@ -17,6 +17,8 @@ import { Comment, ReplyDto } from '../models';
         <lbk-comment
           (reply)="reply.emit($event)"
           (delete)="delete.emit($event)"
+          (up)="up.emit($event)"
+          (down)="down.emit($event)"
           [myUser]="myUser"
           [comment]="comment"
         ></lbk-comment>
@@ -29,6 +31,8 @@ export class CommentListComponent {
   @Input() myUser!: User;
   @Output() delete = new EventEmitter<number>();
   @Output() reply = new EventEmitter<ReplyDto>();
+  @Output() up = new EventEmitter<number>();
+  @Output() down = new EventEmitter<number>();
 
   identifyComment(index: number, comment: Comment) {
     return comment.id;

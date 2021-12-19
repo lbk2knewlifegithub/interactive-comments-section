@@ -12,4 +12,7 @@ export interface CommentsService {
   addReply(
     replyDto: ReplyDto
   ): Observable<{ commentId: number; comment: Comment }>;
+
+  upScore(commentId: number): Observable<boolean>;
+  downScore(commentId: number): Observable<boolean>;
 }
