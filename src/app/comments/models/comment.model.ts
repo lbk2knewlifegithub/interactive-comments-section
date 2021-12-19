@@ -1,4 +1,4 @@
-import { User } from '.';
+import { User } from "src/app/auth/models";
 
 export interface Comment {
   id: number;
