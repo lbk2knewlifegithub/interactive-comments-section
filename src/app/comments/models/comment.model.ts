@@ -1,4 +1,4 @@
-import { User } from "src/app/auth/models";
+import { User } from 'src/app/auth/models';
 
 export interface Comment {
   id: number;
@@ -7,4 +7,5 @@ export interface Comment {
   score: number;
   user: User;
   replies: Comment[];
+  replyingTo?: string;
 }

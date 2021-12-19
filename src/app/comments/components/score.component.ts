@@ -11,7 +11,12 @@ import {
   template: `
     <div class="inline-flex gap-2 bg-muted p-2 rounded-lg">
       <!-- plus -->
-      <button (click)="add(1)" type="button" class="text-gray-400 px-2">
+      <button
+        [disabled]="score === max"
+        (click)="add(1)"
+        type="button"
+        class="text-gray-400 px-2 disabled:opacity-20"
+      >
         <i class="fas fa-plus"></i>
       </button>
       <!-- end plus -->
@@ -19,7 +24,12 @@ import {
       <p class="text-primary text-lg font-black">{{ score }}</p>
 
       <!-- minus -->
-      <button (click)="add(-1)" type="button" class="text-gray-400 px-2">
+      <button
+        [disabled]="score === min"
+        (click)="add(-1)"
+        type="button"
+        class="text-gray-400 px-2 disabled:opacity-20"
+      >
         <i class="fas fa-minus"></i>
       </button>
       <!-- end minus -->

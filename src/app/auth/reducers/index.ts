@@ -1,4 +1,9 @@
-import { Action, combineReducers, createFeatureSelector } from '@ngrx/store';
+import {
+  Action,
+  combineReducers,
+  createFeatureSelector,
+  createSelector
+} from '@ngrx/store';
 import * as fromAuth from 'src/app/auth/reducers/auth.reducer';
 import * as fromRoot from 'src/app/reducers';
 
@@ -22,3 +27,11 @@ export function reducers(state: AuthState | undefined, action: Action) {
  * - Auth Selector
  */
 export const selectAuthState = createFeatureSelector<AuthState>(authFeatureKey);
+export const selectAuthStatusState = createSelector(
+  selectAuthState,
+  (state) => state.status
+);
+export const selectUser = createSelector(
+  selectAuthStatusState,
+  fromAuth.getUser
+);

@@ -24,7 +24,7 @@
     --text-fill: var(--dark-blue);
     --text-muted: var(--grayish-blue);
     --text-inverted: var(--gray-blue);
-    --text-danger: var(--red);
+    --text-danger: var(--soft-red);
 
     /////////////////////////////
     // background colors /////////
@@ -32,6 +32,7 @@
     --bg-fill: var(--very-light-gray);
     --bg-elements: var(--white);
     --bg-muted: var(--light-gray);
+    --bg-primary: var(--moderate-blue);
   }
 
   //make default form look nice
@@ -64,4 +65,7 @@ input.ng-invalid.ng-touched {
 }
 
 @layer components {
+ .badge-primary{
+   @apply bg-primary text-white font-bold py-1 px-2 rounded-md text-xs;
+ }
 }

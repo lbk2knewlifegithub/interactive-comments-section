@@ -5,14 +5,19 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { CommentsRoutingModule } from './comments-routing.module';
 import {
-  CommentComponent,
-  CommentListComponent,
-  ScoreComponent
+  ButtonComponent, CommentComponent,
+  CommentListComponent, ScoreComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
 import { CommentEffects } from './effects';
 
-const COMPONENTS = [CommentListComponent, CommentComponent, ScoreComponent];
+const COMPONENTS = [
+  CommentListComponent,
+  CommentComponent,
+  ScoreComponent,
+  ButtonComponent,
+];
+
 const CONTAINERS = [ViewCommentsPageComponent];
 
 @NgModule({
