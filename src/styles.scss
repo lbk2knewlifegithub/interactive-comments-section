@@ -65,7 +65,15 @@ input.ng-invalid.ng-touched {
 }
 
 @layer components {
- .badge-primary{
-   @apply bg-primary text-white font-bold py-1 px-2 rounded-md text-xs;
- }
+  .badge-primary {
+    @apply bg-primary text-white font-bold py-1 px-2 rounded-md text-xs;
+  }
+
+  .btn {
+    @apply inline-block rounded-lg px-6 py-3 shadow-lg;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white font-medium uppercase tracking-wider hover:opacity-50 disabled:opacity-25;
+  }
 }

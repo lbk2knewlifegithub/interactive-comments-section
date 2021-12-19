@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { LoginPageActions } from '@lbk/auth/actions';
+import { User } from '@lbk/auth/models';
 import * as fromAuth from '@lbk/auth/reducers';
 import { Comment } from '@lbk/comments/models';
 import * as fromComments from '@lbk/comments/reducers';
@@ -11,7 +12,7 @@ import { CommentsPageActions } from '../actions';
   selector: 'lbk-view-comments-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <main class="mt-8">
+    <main class="">
       <div class="container">
         <!-- comment list -->
         <lbk-comment-list
@@ -21,6 +22,11 @@ import { CommentsPageActions } from '../actions';
         <!-- end comment list -->
 
         <!-- enter comment -->
+        <lbk-enter-comment
+          (enter)="comment($event)"
+          class="block mt-10 mb-40"
+          [user]="(user$ | async)!"
+        ></lbk-enter-comment>
         <!-- end enter comment -->
       </div>
     </main>
@@ -28,13 +34,17 @@ import { CommentsPageActions } from '../actions';
 })
 export class ViewCommentsPageComponent implements OnInit {
   comments$!: Observable<Comment[]>;
+  user$!: Observable<User | null>;
   username$!: Observable<string | undefined>;
 
   constructor(private readonly _store: Store) {
     this.comments$ = _store.select(fromComments.selectAllComments);
-    this.username$ = _store
-      .select(fromAuth.selectUser)
-      .pipe(map((user) => user?.username));
+    this.user$ = _store.select(fromAuth.selectUser);
+    this.username$ = this.user$.pipe(map((user) => user?.username));
+
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    }, 200);
   }
 
   ngOnInit(): void {
@@ -43,4 +53,6 @@ export class ViewCommentsPageComponent implements OnInit {
     );
     this._store.dispatch(CommentsPageActions.enter());
   }
+
+  comment(value: string) {}
 }

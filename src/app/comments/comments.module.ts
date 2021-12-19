@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import * as fromComments from '@lbk/comments/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { CommentsRoutingModule } from './comments-routing.module';
 import {
   ButtonComponent, CommentComponent,
-  CommentListComponent, ScoreComponent
+  CommentListComponent, EnterCommentComponent, ScoreComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
 import { CommentEffects } from './effects';
@@ -16,6 +17,7 @@ const COMPONENTS = [
   CommentComponent,
   ScoreComponent,
   ButtonComponent,
+  EnterCommentComponent
 ];
 
 const CONTAINERS = [ViewCommentsPageComponent];
@@ -24,6 +26,7 @@ const CONTAINERS = [ViewCommentsPageComponent];
   imports: [
     CommonModule,
     CommentsRoutingModule,
+    ReactiveFormsModule,
     StoreModule.forFeature(
       fromComments.commentsFeatureKey,
       fromComments.reducers
