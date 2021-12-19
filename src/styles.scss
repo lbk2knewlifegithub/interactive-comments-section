@@ -1,1 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  :root {
+    // colors
+    // Primary
+    --moderate-blue: 238, 40%, 52%;
+    --soft-red: 358, 79%, 66%;
+    --light-grayish-blue: 239, 57%, 85%;
+    --pale-red: 357, 100%, 86%;
+
+    // neutral
+    --dark-blue: 212, 24%, 26%;
+    --grayish-blue: 211, 10%, 45%;
+    --light-gray: 223, 19%, 93%;
+    --very-light-gray: 228, 33%, 97%;
+    --white: 0, 0%, 100%;
+
+    ////////////////////
+    // text colors /////
+    ////////////////////
+    --text-fill: var(--dark-blue);
+    --text-muted: var(--grayish-blue);
+    --text-inverted: var(--gray-blue);
+    --text-danger: var(--red);
+
+    /////////////////////////////
+    // background colors /////////
+    /////////////////////////////
+    --bg-fill: var(--very-light-gray);
+    --bg-elements: var(--white);
+  }
+
+  //make default form look nice
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+  }
+
+  [type="checkbox"],
+  [type="radio"] {
+    @apply border-gray-300 rounded text-indigo-600 focus:ring-indigo-500;
+  }
+}
+
+input.ng-invalid.ng-touched {
+  @apply border-2 border-danger;
+}
+
+@layer components {
+}
