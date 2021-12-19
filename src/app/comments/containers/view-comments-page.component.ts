@@ -24,7 +24,7 @@ import { CommentsPageActions } from '../actions';
 
         <!-- enter comment -->
         <lbk-enter-comment
-          (enter)="comment($event)"
+          (enter)="addComment($event)"
           class="block mt-10 mb-40"
           [user]="(user$ | async)!"
         ></lbk-enter-comment>
@@ -81,5 +81,10 @@ export class ViewCommentsPageComponent implements OnInit {
     this._store.dispatch(CommentsPageActions.setDeleteId({ id: undefined }));
   }
 
-  comment(value: string) {}
+  addComment(content: string) {
+    this.user$.pipe(take(1)).subscribe((user) => {
+      if (!user) return;
+      this._store.dispatch(CommentsPageActions.addComment({ user, content }));
+    });
+  }
 }

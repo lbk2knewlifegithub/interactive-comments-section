@@ -20,3 +20,14 @@ export const deleteCommentFailure = createAction(
   '[Comments/API] Delete Comment Failure',
   props<{ error: any }>()
 );
+
+
+export const addCommentSuccess = createAction(
+  '[Comments/API] Add Comment Success',
+  props<{ comment: Comment }>()
+);
+
+export const addCommentFailure = createAction(
+  '[Comments/API] Add Comment Failure',
+  props<{ error: any }>()
+);

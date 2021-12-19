@@ -1,21 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { User } from '@lbk/auth/models';
 import { Comment } from '@lbk/comments/models';
-import { map, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class CommentsService {
-  constructor(private readonly _http: HttpClient) {}
+export interface CommentsService {
+  getComments(): Observable<Comment[]>;
 
-  getComments(): Observable<Comment[]> {
-    return this._http
-      .get<any>('assets/data.json')
-      .pipe(map((response) => response.comments as Comment[]));
-  }
+  deleteComment(id: number): Observable<boolean>;
 
-
-  deleteComment(id: number): Observable<boolean> {
-    // some http call
-    return of(true);
-  }
+  addComment(user: User, content: string): Observable<Comment>;
 }

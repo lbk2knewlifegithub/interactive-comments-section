@@ -3,7 +3,7 @@ import { User } from 'src/app/auth/models';
 export interface Comment {
   id: number;
   content: string;
-  createdAt: number;
+  createdAt: string;
   score: number;
   user: User;
   replies: Comment[];

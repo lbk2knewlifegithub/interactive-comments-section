@@ -29,14 +29,15 @@ export const reducer = createReducer(
   on(CommentsApiActions.loadCommentsSuccess, (state, { comments }) =>
     adapter.addMany(comments, state)
   ),
+  on(CommentsApiActions.addCommentSuccess, (state, { comment }) =>
+    adapter.addOne(comment, state)
+  ),
   on(CommentsApiActions.deleteCommentSuccess, (state, { id }) => {
     const comment = state.entities[id];
 
     if (comment) {
       return adapter.removeOne(id, state);
     }
-
-    console.log(id);
 
     // remove inside replies
     for (const entity of Object.values(state.entities)) {
@@ -51,7 +52,7 @@ export const reducer = createReducer(
         {
           id: entity.id,
           changes: {
-            replies:entity.replies.filter((reply) => reply.id !== id),
+            replies: entity.replies.filter((reply) => reply.id !== id),
           },
         },
         state
