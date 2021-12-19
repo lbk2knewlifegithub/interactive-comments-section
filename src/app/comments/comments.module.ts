@@ -12,6 +12,7 @@ import {
   ConfirmDeleteComponent,
   DeletePopupComponent,
   EnterCommentComponent,
+  ReplyComponent,
   ScoreComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
@@ -25,6 +26,7 @@ const COMPONENTS = [
   EnterCommentComponent,
   DeletePopupComponent,
   ConfirmDeleteComponent,
+  ReplyComponent
 ];
 
 const CONTAINERS = [ViewCommentsPageComponent];

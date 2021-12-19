@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { LoginPageActions } from '@lbk/auth/actions';
 import { User } from '@lbk/auth/models';
 import * as fromAuth from '@lbk/auth/reducers';
-import { Comment } from '@lbk/comments/models';
+import { Comment, ReplyDto } from '@lbk/comments/models';
 import * as fromComments from '@lbk/comments/reducers';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
@@ -12,12 +12,13 @@ import { CommentsPageActions } from '../actions';
   selector: 'lbk-view-comments-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <main class="">
+    <main *ngIf="user$ | async as user">
       <div class="container">
         <!-- comment list -->
         <lbk-comment-list
+          (reply)="addReply($event)"
           (delete)="requestDeleteComment($event)"
-          [username]="(username$ | async)!"
+          [myUser]="user"
           [comments]="(comments$ | async)!"
         ></lbk-comment-list>
         <!-- end comment list -->
@@ -26,7 +27,7 @@ import { CommentsPageActions } from '../actions';
         <lbk-enter-comment
           (enter)="addComment($event)"
           class="block mt-10 mb-40"
-          [user]="(user$ | async)!"
+          [user]="user"
         ></lbk-enter-comment>
         <!-- end enter comment -->
       </div>
@@ -43,14 +44,12 @@ import { CommentsPageActions } from '../actions';
 export class ViewCommentsPageComponent implements OnInit {
   comments$!: Observable<Comment[]>;
   user$!: Observable<User | null>;
-  username$!: Observable<string | undefined>;
   openDeletePopup$!: Observable<boolean>;
   deleteId$!: Observable<number | undefined>;
 
   constructor(private readonly _store: Store) {
     this.comments$ = _store.select(fromComments.selectAllComments);
     this.user$ = _store.select(fromAuth.selectUser);
-    this.username$ = this.user$.pipe(map((user) => user?.username));
     this.deleteId$ = _store.select(fromComments.selectDeleteId);
     this.openDeletePopup$ = this.deleteId$.pipe(map((id) => !!id));
 
@@ -86,5 +85,9 @@ export class ViewCommentsPageComponent implements OnInit {
       if (!user) return;
       this._store.dispatch(CommentsPageActions.addComment({ user, content }));
     });
+  }
+
+  addReply(replyDto: ReplyDto) {
+    this._store.dispatch(CommentsPageActions.addReply({ replyDto }));
   }
 }

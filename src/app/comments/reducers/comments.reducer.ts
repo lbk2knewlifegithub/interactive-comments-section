@@ -15,23 +15,68 @@ export interface State extends EntityState<Comment> {
 
 export const adapter: EntityAdapter<Comment> = createEntityAdapter<Comment>({
   selectId: (comment: Comment) => comment.id,
-  sortComparer: false,
+  sortComparer: (a: Comment, b: Comment) => b.score - a.score
 });
 
 export const initialState: State = adapter.getInitialState({});
 
 export const reducer = createReducer(
   initialState,
+  /**
+   * - Add Reply Success
+   */
+  on(CommentsApiActions.addReplySuccess, (state, { comment, commentId }) => {
+    // reply sub
+    for (const com of Object.values(state.entities)) {
+      if (com?.replies.find((c) => (c.id = commentId))) {
+        return adapter.updateOne(
+          {
+            id: com.id,
+            changes: { replies: [...com.replies, comment] },
+          },
+          state
+        );
+      }
+    }
+
+    const parentComment = state.entities[commentId];
+
+    if (!parentComment) return state;
+
+    return adapter.updateOne(
+      {
+        id: parentComment.id,
+        changes: { replies: [...parentComment.replies, comment] },
+      },
+      state
+    );
+  }),
+
+  /**
+   * - Set delete Id
+   */
   on(CommentsPageActions.setDeleteId, (state, { id }) => ({
     ...state,
     deleteId: id,
   })),
+
+  /**
+   * - Load Comments Success
+   */
   on(CommentsApiActions.loadCommentsSuccess, (state, { comments }) =>
     adapter.addMany(comments, state)
   ),
+
+  /**
+   * - Add Comment Success
+   */
   on(CommentsApiActions.addCommentSuccess, (state, { comment }) =>
     adapter.addOne(comment, state)
   ),
+
+  /**
+   * - Delete Comment Success
+   */
   on(CommentsApiActions.deleteCommentSuccess, (state, { id }) => {
     const comment = state.entities[id];
 

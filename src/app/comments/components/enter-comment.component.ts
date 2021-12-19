@@ -38,7 +38,7 @@ import { User } from '@lbk/auth/models';
 
         <!-- send button -->
         <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-          Send
+          {{ submitButtonName }}
         </button>
         <!-- end send button -->
       </div>
@@ -46,6 +46,7 @@ import { User } from '@lbk/auth/models';
   `,
 })
 export class EnterCommentComponent implements OnInit {
+  @Input() submitButtonName = 'Send';
   @Input() user?: User;
   @Output() enter = new EventEmitter<string>();
   form!: FormGroup;
@@ -68,6 +69,6 @@ export class EnterCommentComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.enter.emit(this.form.value.comment);
-    this.form.reset({ comment: '', });
+    this.form.reset({ comment: '' });
   }
 }

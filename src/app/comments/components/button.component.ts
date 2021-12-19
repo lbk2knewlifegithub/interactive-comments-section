@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button
+      [disabled]="disable"
       type="button"
       class="font-black text-sm inline-flex gap-2 items-center {{
         textColor
@@ -19,6 +20,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class ButtonComponent {
   @Input() name: 'reply' | 'delete' | 'edit' = 'reply';
+  @Input() disable = false;
 
   // get icon(): string {
   //   if (this.name === 'delete') return 'trash';

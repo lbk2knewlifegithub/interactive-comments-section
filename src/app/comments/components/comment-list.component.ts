@@ -5,7 +5,8 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { Comment } from '../models';
+import { User } from '@lbk/auth/models';
+import { Comment, ReplyDto } from '../models';
 
 @Component({
   selector: 'lbk-comment-list',
@@ -13,17 +14,24 @@ import { Comment } from '../models';
   template: `
     <div class="grid gap-4">
       <ng-container *ngFor="let comment of comments; trackBy: identifyComment">
-        <lbk-comment (delete)="delete.emit($event)" [username]="username" [comment]="comment"></lbk-comment>
+        <lbk-comment
+          (reply)="reply.emit($event)"
+          (delete)="delete.emit($event)"
+          [myUser]="myUser"
+          [comment]="comment"
+        ></lbk-comment>
       </ng-container>
     </div>
   `,
 })
 export class CommentListComponent {
   @Input() comments!: Comment[];
-  @Input() username?: string;
+  @Input() myUser!: User;
   @Output() delete = new EventEmitter<number>();
+  @Output() reply = new EventEmitter<ReplyDto>();
 
   identifyComment(index: number, comment: Comment) {
     return comment.id;
   }
+
 }

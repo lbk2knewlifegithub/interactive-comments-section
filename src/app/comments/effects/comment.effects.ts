@@ -43,10 +43,22 @@ export class CommentEffects {
       ofType(CommentsPageActions.addComment),
       switchMap(({ user, content }) =>
         this._commentsService.addComment(user, content).pipe(
-          map((comment) => CommentsApiActions.addCommentSuccess({  comment })),
+          map((comment) => CommentsApiActions.addCommentSuccess({ comment })),
           catchError((error) =>
             of(CommentsApiActions.addCommentFailure({ error }))
           )
+        )
+      )
+    )
+  );
+
+  addReply$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(CommentsPageActions.addReply),
+      switchMap(({ replyDto }) =>
+        this._commentsService.addReply(replyDto).pipe(
+          map(({commentId, comment}) => CommentsApiActions.addReplySuccess({ comment, commentId })),
+          catchError((error) => of(CommentsApiActions.addReplyFailure({ error })))
         )
       )
     )
