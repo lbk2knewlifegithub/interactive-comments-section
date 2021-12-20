@@ -15,13 +15,13 @@ import { Comment, Edit, ReplyDto } from '../models';
     <div class="grid gap-4">
       <ng-container *ngFor="let comment of comments; trackBy: identifyComment">
         <lbk-comment
-          (reply)="reply.emit($event)"
-          (delete)="delete.emit($event)"
-          (up)="up.emit($event)"
-          (down)="down.emit($event)"
-          (edit)="edit.emit($event)"
           [myUser]="myUser"
           [comment]="comment"
+          (reply)="reply.emit($event)"
+          (delete)="delete.emit($event)"
+          (edit)="edit.emit($event)"
+          (up)="up.emit($event)"
+          (down)="down.emit($event)"
         ></lbk-comment>
       </ng-container>
     </div>

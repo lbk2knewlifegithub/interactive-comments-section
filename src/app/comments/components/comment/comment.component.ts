@@ -18,8 +18,8 @@ import { EditCommentComponent } from '..';
 export class CommentComponent {
   @Input() comment!: Comment;
   @Input() myUser!: User;
-  @Output() delete = new EventEmitter<number>();
   @Output() reply = new EventEmitter<ReplyDto>();
+  @Output() delete = new EventEmitter<number>();
   @Output() edit = new EventEmitter<Edit>();
   @Output() up = new EventEmitter<number>();
   @Output() down = new EventEmitter<number>();
@@ -66,16 +66,11 @@ export class CommentComponent {
     return this.comment.user.username === this.myUser.username;
   }
 
-  formatContent(content: string) {
-    if(!this.comment.replyingTo) return content;
-    return content.substring(content.indexOf(' ')).trim();
-  }
-
   sendReply(content: string) {
     this.replyingTo = undefined;
     this.reply.emit({
       myUser: this.myUser,
-      content: this.formatContent(content),
+      content: content.substring(content.indexOf(' ')).trim(),
       toUserName: this.user.username,
       toCommentId: this.comment.id,
     });
@@ -86,14 +81,20 @@ export class CommentComponent {
     return `${tmp ? '@' + tmp + ' ' : ''}${this.comment.content}`;
   }
 
+  private formatCommentToUpdate(content: string){
+    if(!this.comment.replyingTo) return content;
+     return content.substring(content.indexOf(' ')).trim();
+  }
+
   onUpdate(): void {
     this.openEditPanel = false;
-    const newContent = this.formatContent(
-      this.editCommentComponent.formControl.value
-    );
-
+    const newContent = this.formatCommentToUpdate(this.editCommentComponent.formControl.value);
     if (newContent === this.comment.content) return;
 
     this.edit.emit({ id: this.comment.id, content: newContent });
+  }
+
+  identifyComment(index: number, comment: Comment) {
+    return comment.id;
   }
 }
