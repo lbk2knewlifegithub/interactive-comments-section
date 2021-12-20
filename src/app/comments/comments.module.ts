@@ -2,19 +2,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import * as fromComments from '@lbk/comments/reducers';
+import { DialogModule } from '@lbk/shared/dialog';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { CommentsRoutingModule } from './comments-routing.module';
 import {
   ButtonComponent,
+  CancelReplyDialogComponent,
   CommentComponent,
   CommentListComponent,
   ConfirmDeleteComponent,
   DeletePopupComponent,
-  EnterCommentComponent,
-  ReplyComponent,
-  ScoreComponent,
-  EditCommentComponent
+  EditCommentComponent,
+  EnterCommentComponent, ScoreComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
 import { FocusDirective } from './directives';
@@ -28,9 +28,9 @@ const COMPONENTS = [
   EnterCommentComponent,
   DeletePopupComponent,
   ConfirmDeleteComponent,
-  ReplyComponent,
   EditCommentComponent,
-  FocusDirective
+  FocusDirective,
+  CancelReplyDialogComponent,
 ];
 
 const CONTAINERS = [ViewCommentsPageComponent];
@@ -40,6 +40,7 @@ const CONTAINERS = [ViewCommentsPageComponent];
     CommonModule,
     CommentsRoutingModule,
     ReactiveFormsModule,
+    DialogModule,
     StoreModule.forFeature(
       fromComments.commentsFeatureKey,
       fromComments.reducers

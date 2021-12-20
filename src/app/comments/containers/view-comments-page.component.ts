@@ -35,12 +35,21 @@ import { CommentsPageActions } from '../actions';
         <!-- end enter comment -->
       </div>
 
-      <!-- delete popup -->
-      <lbk-delete-popup
-        (deleted)="onConfirmDelete($event)"
+      <!-- delete dialog -->
+      <lbk-delete-dialog
+        class="fixed"
         [open]="(openDeletePopup$ | async)!"
-      ></lbk-delete-popup>
-      <!-- end delete popup -->
+        (deleted)="onConfirmDelete($event)"
+      ></lbk-delete-dialog>
+      <!-- end delete dialog -->
+
+      <!-- cancel reply dialog -->
+      <!-- <lbk-dialog-ng-content class="fixed" [open]="true">
+        <lbk-confirm-delete
+          (deleted)="onConfirmDelete($event)"
+        ></lbk-confirm-delete>
+      </lbk-dialog-ng-content> -->
+      <!-- end cancel reply dialog -->
     </main>
   `,
 })

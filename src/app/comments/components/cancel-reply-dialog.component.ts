@@ -7,35 +7,36 @@ import {
 } from '@angular/core';
 import { scaleInOut } from '@lbk/shared/animations';
 import { fadeInOut } from '@lbk/shared/animations/fade.anim';
+import { Dialog } from '@lbk/shared/dialog';
 
 @Component({
-  selector: 'lbk-delete-popup',
+  selector: 'lbk-cancel-reply-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      *ngIf="open"
-      @fadeInOut
-      class="fixed top-0 left-0l w-full h-screen grid place-content-center bg-black/20"
-    >
-      <div class="container">
-        <lbk-confirm-delete
-          (deleted)="deleted.emit($event)"
-          class="block"
-          @scaleInOut
-        ></lbk-confirm-delete>
-      </div>
-    </div>
+    <lbk-dialog-ng-content class="fixed" [open]="open">
+      <lbk-dialog
+        (confirmed)="deleted.emit($event)"
+        [dialog]="dialog"
+      ></lbk-dialog>
+    </lbk-dialog-ng-content>
   `,
   animations: [
     fadeInOut({ delayEnter: 0, delayLeave: 300 }),
     scaleInOut({ delayEnter: 300, delayLeave: 0 }),
   ],
 })
-export class DeletePopupComponent {
+export class CancelReplyDialogComponent {
   @Input() open = false;
   /**
    * - Emit true when the user confirm the deletion
    * - Emit false when the user cancel the deletion
    */
   @Output() deleted = new EventEmitter<boolean>();
+
+  dialog: Dialog = {
+    title: 'Delete comment',
+    message:
+      "Are you sure you want to delete this comment? This will remove the comment and can't be undone.",
+    confirmedButtonText: 'delete',
+  };
 }

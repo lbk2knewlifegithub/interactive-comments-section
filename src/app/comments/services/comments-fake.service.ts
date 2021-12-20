@@ -1,87 +1,206 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { User } from '@lbk/auth/models';
 import { Comment, Edit, ReplyDto } from '@lbk/comments/models';
 import { fakeData } from '@lbk/comments/services/data';
-import { Observable, of } from 'rxjs';
+import { forkJoin, map, Observable, of, tap, throwError } from 'rxjs';
 import { CommentsService } from './comments.service';
 
+export function storageFactory() {
+  return typeof window === undefined || typeof localStorage === undefined
+    ? null
+    : localStorage;
+}
+
+export const LOCAL_STORAGE_TOKEN = new InjectionToken(
+  'comments-app-local-storage',
+  { factory: storageFactory }
+);
+
 @Injectable({ providedIn: 'root' })
-export class CommentsServiceFake implements CommentsService {
-  comments = fakeData.comments;
+export class CommentsStorageService implements CommentsService {
+  commentsKey = 'comments';
+
+  supported(): Observable<boolean> {
+    return this.storage !== null
+      ? of(true)
+      : throwError(() => 'Local Storage Not Supported');
+  }
+
+  constructor(@Inject(LOCAL_STORAGE_TOKEN) private storage: Storage) {}
+
+  private save(comments: Comment[]) {
+    this.storage.setItem(this.commentsKey, JSON.stringify(comments));
+  }
 
   getComments(): Observable<Comment[]> {
-    return of(fakeData.comments);
+    return this.supported().pipe(
+      map(() => this.storage.getItem(this.commentsKey)),
+      map((value: string | null) =>
+        value ? JSON.parse(value) : fakeData.comments
+      )
+    );
   }
 
   deleteComment(id: number): Observable<boolean> {
-    // some http call
-    return of(true);
-  }
-
-  private _createId(): number {
-    const comments = fakeData.comments;
-    const totalReply = comments.reduce(
-      (acc, comment) => comment.replies.length + acc,
-      0
+    return this.getComments().pipe(
+      // filter in first level
+      map((comments) => comments.filter((comment) => comment.id !== id)),
+      // filter in second level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          replies: c.replies.filter((r) => r.id !== id),
+        }))
+      ),
+      tap((comments) => this.save(comments)),
+      map(() => true)
     );
-    return comments.length + totalReply;
   }
 
-  private _findComment(comment_id: number): Comment | undefined {
-    // find in main list
-    return this.comments.find((comment) => comment.id === comment_id);
+  private _createId(): Observable<number> {
+    return this.getComments().pipe(
+      map(
+        (comments) =>
+          comments.length +
+          comments.reduce((acc, comment) => acc + comment.replies.length, 0)
+      )
+    );
+  }
 
-    // // find in replies
-    // for (const c of this.comments) {
-    //   const tmp = c.replies.find((com) => com.id === comment_id);
-    //   if (tmp) return tmp;
-    // }
-
-    // return undefined;
+  private _generateComment(
+    user: User,
+    content: string,
+    replyingTo: string | undefined = undefined
+  ): Observable<Comment> {
+    return this._createId().pipe(
+      map((id) => ({
+        id,
+        user,
+        content,
+        score: 0,
+        replyingTo,
+        replies: [],
+        createdAt: '1 minutes ago',
+      }))
+    );
   }
 
   addComment(user: User, content: string): Observable<Comment> {
-    const comments = fakeData.comments;
-    // some http call
-    const comment: Comment = {
-      id: this._createId(),
-      user,
-      content,
-      score: 0,
-      replies: [],
-      createdAt: '1 minutes ago',
-    };
-
-    fakeData.comments = [...comments, comment];
-
-    return of(comment);
+    return forkJoin([
+      this.getComments(),
+      this._generateComment(user, content),
+    ]).pipe(
+      map(([comments, comment]) => ({
+        comments: [...comments, comment],
+        comment,
+      })),
+      map(({ comments, comment }) => ({
+        comments: comments.sort((a, b) =>
+          b.score === a.score ? 1 : b.score - a.score
+        ),
+        comment,
+      })),
+      tap(({ comments }) => this.save(comments)),
+      map(({ comment }) => comment)
+    );
   }
 
   addReply(
     replyDto: ReplyDto
   ): Observable<{ commentId: number; comment: Comment }> {
-    const { content, toUserName, myUser } = replyDto;
-    const comment: Comment = {
-      id: Math.floor(Math.random() * 99_999),
-      replyingTo: toUserName,
-      createdAt: '1 minutes ago',
-      replies: [],
-      score: 0,
-      user: myUser,
-      content,
-    };
-
-    return of({ commentId: replyDto.toCommentId, comment });
+    const { content, toUserName, myUser, toCommentId } = replyDto;
+    return forkJoin([
+      this.getComments(),
+      this._generateComment(myUser, content, toUserName),
+    ]).pipe(
+      // Check in first level
+      map(([comments, reply]) => ({
+        comments: comments.map((c) => ({
+          ...c,
+          replies: c.id === toCommentId ? [...c.replies, reply] : c.replies,
+        })),
+        reply,
+      })),
+      // check in second level
+      map(({ comments, reply }) => ({
+        comments: comments.map((c) => {
+          const found = c.replies.find((r) => r.id === toCommentId);
+          if (found) return { ...c, replies: [...c.replies, reply] };
+          return c;
+        }),
+        reply,
+      })),
+      tap(({ comments }) => this.save(comments)),
+      map(({ comments, reply }) => ({ commentId: toCommentId, comment: reply }))
+    );
   }
 
   editComment(edit: Edit): Observable<boolean> {
-    return of(true);
+    const { id, content } = edit;
+    return this.getComments().pipe(
+      // First level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          content: c.id === id ? content : c.content,
+        }))
+      ),
+      // Second level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          replies: c.replies.map((r) => ({ ...r, content: r.id === id ? content : r.content })),
+        }))
+      ),
+      tap((comments) => this.save(comments)),
+      map(() => true)
+    );
   }
 
   upScore(commentId: number): Observable<boolean> {
-    return of(true);
+    return this.getComments().pipe(
+      // First level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          score: c.id === commentId ? c.score + 1 : c.score,
+        }))
+      ),
+      // Second level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          replies: c.replies.map((r) => ({
+            ...r,
+            score: r.id === commentId ? r.score + 1 : r.score,
+          })),
+        }))
+      ),
+      tap((comments) => this.save(comments)),
+      map(() => true)
+    );
   }
   downScore(commentId: number): Observable<boolean> {
-    return of(true);
+    return this.getComments().pipe(
+      // First level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          score: c.id === commentId ? Math.max(c.score - 1, 0) : c.score,
+        }))
+      ),
+      // Second level
+      map((comments) =>
+        comments.map((c) => ({
+          ...c,
+          replies: c.replies.map((r) => ({
+            ...r,
+            score: r.id === commentId ? Math.max(r.score - 1, 0) : r.score,
+          })),
+        }))
+      ),
+      tap((comments) => this.save(comments)),
+      map(() => true)
+    );
   }
 }

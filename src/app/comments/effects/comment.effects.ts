@@ -3,7 +3,7 @@ import { CommentsApiActions, CommentsPageActions } from '@lbk/comments/actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { CommentsServiceFake } from '../services/comments-fake.service';
+import { CommentsStorageService } from '../services/comments-fake.service';
 import { CommentsService } from '../services/comments.service';
 
 @Injectable()
@@ -112,7 +112,7 @@ export class CommentEffects {
 
   constructor(
     private readonly _actions$: Actions,
-    @Inject(CommentsServiceFake)
+    @Inject(CommentsStorageService)
     private readonly _commentsService: CommentsService
   ) {}
 }
