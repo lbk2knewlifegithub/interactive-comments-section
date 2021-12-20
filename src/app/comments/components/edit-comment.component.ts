@@ -22,8 +22,7 @@ import { persist } from '../validators';
         cols="30"
         rows="6"
       ></textarea>
-
-      <div class="flex items-center justify-between lg:justify-end">
+      <div class="flex items-center justify-between md:justify-end">
         <!-- use to inject score component -->
         <ng-content></ng-content>
         <!-- end use to inject score component -->

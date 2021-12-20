@@ -55,7 +55,7 @@ import { persist } from '../validators';
         <!-- user -->
         <a *ngIf="user" routerLink="/">
           <img
-            class="w-8 h-8 rounded-full"
+            class="w-10 h-10 rounded-full"
             [src]="avatar"
             [alt]="user.username"
           />
