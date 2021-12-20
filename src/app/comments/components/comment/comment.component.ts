@@ -67,6 +67,7 @@ export class CommentComponent {
   }
 
   formatContent(content: string) {
+    if(!this.comment.replyingTo) return content;
     return content.substring(content.indexOf(' ')).trim();
   }
 
