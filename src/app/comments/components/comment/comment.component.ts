@@ -91,6 +91,8 @@ export class CommentComponent {
       this.editCommentComponent.formControl.value
     );
 
+    if (newContent === this.comment.content) return;
+
     this.edit.emit({ id: this.comment.id, content: newContent });
   }
 }

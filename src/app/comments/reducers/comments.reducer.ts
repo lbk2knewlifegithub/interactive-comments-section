@@ -16,7 +16,8 @@ export interface State extends EntityState<Comment> {
 
 export const adapter: EntityAdapter<Comment> = createEntityAdapter<Comment>({
   selectId: (comment: Comment) => comment.id,
-  sortComparer: (a: Comment, b: Comment) => b.score - a.score,
+  sortComparer: (a: Comment, b: Comment) =>
+    b.score == a.score ? 1 : b.score - a.score,
 });
 
 export const initialState: State = adapter.getInitialState({});
