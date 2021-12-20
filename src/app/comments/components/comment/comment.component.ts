@@ -3,12 +3,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
-  ViewChild
+  Output
 } from '@angular/core';
 import { User } from '@lbk/auth/models';
 import { Comment, Edit, ReplyDto } from '@lbk/comments/models';
-import { EditCommentComponent } from '..';
 
 @Component({
   selector: 'lbk-comment',
@@ -23,8 +21,6 @@ export class CommentComponent {
   @Output() edit = new EventEmitter<Edit>();
   @Output() up = new EventEmitter<number>();
   @Output() down = new EventEmitter<number>();
-
-  @ViewChild(EditCommentComponent) editCommentComponent!: EditCommentComponent;
 
   replyingTo?: string;
   openEditPanel = false;
@@ -61,7 +57,7 @@ export class CommentComponent {
     this.replyingTo = `@${this.comment.user.username} `;
   }
 
-  get you(): boolean {
+  get isYou(): boolean {
     if (!this.myUser) return false;
     return this.comment.user.username === this.myUser.username;
   }
@@ -81,14 +77,10 @@ export class CommentComponent {
     return `${tmp ? '@' + tmp + ' ' : ''}${this.comment.content}`;
   }
 
-  private formatCommentToUpdate(content: string){
-    if(!this.comment.replyingTo) return content;
-     return content.substring(content.indexOf(' ')).trim();
-  }
-
-  onUpdate(): void {
+  onUpdate(newContent: string): void {
+    // Close edit panel
     this.openEditPanel = false;
-    const newContent = this.formatCommentToUpdate(this.editCommentComponent.formControl.value);
+
     if (newContent === this.comment.content) return;
 
     this.edit.emit({ id: this.comment.id, content: newContent });

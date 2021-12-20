@@ -20,18 +20,38 @@ import { persist } from '../validators';
     <form
       [formGroup]="form"
       (ngSubmit)="onSubmit($event)"
-      class="grid gap-8 bg-white p-4 mb-32"
+      class="flex flex-col gap-8 bg-white p-4 mb-20 rounded-md- md:flex-row md:gap-5 md:p-6"
     >
+      <!-- user -->
+      <a *ngIf="user" class="hidden md:!block" routerLink="/">
+        <div>
+          <img
+            class="min-w-10 min-h-10 rounded-full"
+            [src]="avatar"
+            [alt]="user.username"
+          />
+        </div>
+      </a>
+      <!-- end user -->
+
       <textarea
         #textarea
         formControlName="comment"
         placeholder="Add a comment.."
         cols="30"
         rows="3"
-        class="resize-none"
+        class="block resize-none"
       ></textarea>
 
-      <div class="flex justify-between items-center">
+      <!-- send button -->
+      <div class="hidden md:block">
+        <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+          {{ submitButtonName }}
+        </button>
+      </div>
+      <!-- end send button -->
+
+      <div class="flex justify-between items-center md:hidden">
         <!-- user -->
         <a *ngIf="user" routerLink="/">
           <img

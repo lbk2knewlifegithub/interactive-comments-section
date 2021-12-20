@@ -8,13 +8,15 @@ import { StoreModule } from '@ngrx/store';
 import { CommentsRoutingModule } from './comments-routing.module';
 import {
   ButtonComponent,
-  CancelReplyDialogComponent,
+  CommentActionsComponent,
   CommentComponent,
   CommentListComponent,
   ConfirmDeleteComponent,
+  ContentCommentComponent,
   DeletePopupComponent,
   EditCommentComponent,
-  EnterCommentComponent, ScoreComponent
+  EnterCommentComponent,
+  ScoreComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
 import { FocusDirective } from './directives';
@@ -30,7 +32,8 @@ const COMPONENTS = [
   ConfirmDeleteComponent,
   EditCommentComponent,
   FocusDirective,
-  CancelReplyDialogComponent,
+  ContentCommentComponent,
+  CommentActionsComponent,
 ];
 
 const CONTAINERS = [ViewCommentsPageComponent];

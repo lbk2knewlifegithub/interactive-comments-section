@@ -1,88 +1,78 @@
 <div>
-  <div class="grid gap-4 p-4 bg-white rounded-lg">
-    <div class="flex items-center gap-4">
-      <!-- avatar -->
-      <img class="w-10 h-10 rounded-full" [src]="avatar" [alt]="user.username" />
-      <!-- end avatar -->
+  <div class="flex flex-col p-4 bg-white rounded-lg md:flex-row md:gap-6 md:p-6 ">
+    <!-- score -->
+    <lbk-score direction="vertical" class="hidden md:block " [disable]="isYou" (up)="up.emit(comment.id)"
+      (down)="down.emit(comment.id)" [score]="comment.score">
+    </lbk-score>
+    <!-- score -->
 
-      <div class="flex items-center gap-2">
-        <!-- user name -->
-        <span class="font-black">{{ user.username }}</span>
-        <!-- end user name -->
+    <div class="grid w-full gap-4">
+      <div class="flex items-center gap-4">
+        <!-- avatar -->
+        <img class="w-10 h-10 rounded-full" [src]="avatar" [alt]="user.username" />
+        <!-- end avatar -->
 
-        <ng-container *ngIf="you">
-          <span class="badge-primary">you</span>
-        </ng-container>
+        <div class="flex items-center gap-2">
+          <!-- user name -->
+          <a routerLink="/" class="font-black">{{ user.username }}</a>
+          <!-- end user name -->
+
+          <ng-container *ngIf="isYou">
+            <span class="badge-primary">you</span>
+          </ng-container>
+        </div>
+
+        <!-- created at -->
+        <p>{{ comment.createdAt }}</p>
+        <!-- end created at -->
+
+        <!-- actions  desktop-->
+        <lbk-comment-actions class="hidden ml-auto md:block" [isYou]="isYou" (reply)="onReply()"
+          (delete)="delete.emit(comment.id)" (edit)="onEdit()">
+        </lbk-comment-actions>
+        <!-- end actions desktop-->
       </div>
 
-      <!-- created at -->
-      <p>{{ comment.createdAt }}</p>
-      <!-- end created at -->
-    </div>
+      <div *ngIf="!openEditPanel" class="grid w-full gap-4">
 
-    <div>
-      <!-- content -->
-      <p *ngIf="!openEditPanel; else editPanel" class="text-muted">
-        <!-- replying to -->
-        <span *ngIf="comment.replyingTo as replyingTo" class="font-black text-primary">
-          @{{ replyingTo }}
-        </span>
-        <!-- end replying to -->
+        <!-- content -->
+        <lbk-content-comment [comment]="comment"></lbk-content-comment>
+        <!-- end content -->
 
-        <span>{{ comment.content }}</span>
-      </p>
-      <!-- end content -->
+        <div class="flex items-center justify-between md:hidden">
+          <!-- score -->
+          <lbk-score [disable]="isYou" (up)="up.emit(comment.id)" (down)="down.emit(comment.id)" [score]="comment.score">
+          </lbk-score>
+          <!-- end score -->
 
-      <!-- textarea display when user click edit button -->
-      <ng-template #editPanel>
-        <lbk-edit-comment [comment]="comment"></lbk-edit-comment>
-      </ng-template>
-      <!-- end textarea display when user click edit button -->
-    </div>
+          <!-- actions -->
+          <lbk-comment-actions [isYou]="isYou" (reply)="onReply()" (delete)="delete.emit(comment.id)" (edit)="onEdit()">
+          </lbk-comment-actions>
+          <!-- end actions -->
+        </div>
+
+      </div>
 
 
-
-    <div class="flex items-center justify-between">
-      <!-- score -->
-      <lbk-score [disable]="you" (up)="up.emit(comment.id)" (down)="down.emit(comment.id)" [score]="comment.score">
-      </lbk-score>
-      <!-- end score -->
-
-      <ng-container *ngIf="you; else replyButton">
-        <!-- update button -->
-        <button (click)="onUpdate()" *ngIf="openEditPanel; else deleteEdit" type="button"
-          class="btn btn-primary">Update</button>
-        <!-- end update button -->
-
-        <ng-template #deleteEdit>
-          <div class="flex gap-4">
-            <!-- delete -->
-            <lbk-button (click)="delete.emit(comment.id)" name="delete"></lbk-button>
-            <!-- end delete -->
-
-            <!-- edit -->
-            <lbk-button (click)="onEdit()" name="edit"></lbk-button>
-            <!-- end edit -->
-          </div>
-        </ng-template>
-      </ng-container>
-
-      <!-- button reply -->
-      <ng-template #replyButton>
-        <lbk-button (click)="onReply()" name="reply"></lbk-button>
-      </ng-template>
-      <!-- end button reply -->
+      <!-- edit comment -->
+      <lbk-edit-comment (edit)="onUpdate($event)" [comment]="comment" *ngIf="openEditPanel">
+        <lbk-score class="md:hidden" [disable]="isYou" (up)="up.emit(comment.id)" (down)="down.emit(comment.id)"
+          [score]="comment.score">
+        </lbk-score>
+      </lbk-edit-comment>
+      <!-- end edit comment -->
     </div>
   </div>
 
+
   <!-- reply panel-->
-  <lbk-enter-comment *ngIf="replyingTo" [preWrite]="replyingTo" [focus]="true" [user]="myUser"
+  <lbk-enter-comment submitButtonName="reply" *ngIf="replyingTo" [preWrite]="replyingTo" [focus]="true" [user]="myUser"
     (enter)="sendReply($event)" class="block mt-4">
   </lbk-enter-comment>
   <!-- end reply panel-->
 
   <!-- replies -->
-  <div class="grid gap-4 pl-4 mt-4 border-l-2 border-gray-200">
+  <div class="grid gap-4 pl-4 mt-4 border-l-2 border-gray-200 md:pl-8 md:ml-8 lg:ml-10 lg:pl-10 lg:mt-6">
     <lbk-comment-list (reply)="reply.emit($event)" (delete)="delete.emit($event)" (up)="up.emit($event)"
       (down)="down.emit($event)" (edit)="edit.emit($event)" [myUser]="myUser" [comments]="comment.replies">
     </lbk-comment-list>

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
   Output
@@ -13,27 +14,38 @@ import { persist } from '../validators';
   selector: 'lbk-edit-comment',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- <span
-      #textarea
-      [focus]="focus"
-      class="inline-block p-4 overflow-hidden break-words border rounded-lg min-w-[300px] max-w-xs"
-      role="textbox"
-      contenteditable
-      aria-placeholder="Add a comment.."
-      [innerHtml]="content"
-    ></span> -->
+    <div class="grid gap-4">
+      <textarea
+        class="overflow-visible"
+        [focus]="true"
+        [formControl]="formControl"
+        cols="30"
+        rows="6"
+      ></textarea>
 
-    <textarea
-      class="overflow-visible"
-      [focus]="true"
-      [formControl]="formControl"
-      cols="30"
-      rows="10"
-    ></textarea>
+      <div class="flex items-center justify-between lg:justify-end">
+        <!-- use to inject score component -->
+        <ng-content></ng-content>
+        <!-- end use to inject score component -->
+
+        <!-- update button -->
+        <button
+          [disabled]="formControl.invalid"
+          (click)="onUpdate()"
+          type="button"
+          class="btn btn-primary"
+        >
+          Update
+        </button>
+        <!-- end update button -->
+      </div>
+    </div>
   `,
 })
 export class EditCommentComponent implements OnInit {
   @Input() comment!: Comment;
+  @Output() edit = new EventEmitter<string>();
+
   formControl!: FormControl;
 
   ngOnInit(): void {
@@ -50,4 +62,15 @@ export class EditCommentComponent implements OnInit {
     return this.comment.replyingTo ? `@${this.comment.replyingTo} ` : '';
   }
 
+  private formatCommentToUpdate(content: string) {
+    if (!this.comment.replyingTo) return content;
+    return content.substring(content.indexOf(' ')).trim();
+  }
+
+  onUpdate() {
+    const content = this.formControl.value;
+    if (content == '') return alert('Comment cannot be empty');
+
+    this.edit.emit(this.formatCommentToUpdate(content));
+  }
 }

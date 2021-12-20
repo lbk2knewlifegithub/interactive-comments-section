@@ -6,9 +6,9 @@ export function persist(persistValue: string) {
   ): { [key: string]: boolean } | null {
     const controlValue = control.value as string;
 
-    if(controlValue.length === persistValue.length) return { persist: true };
+    if (controlValue.length === persistValue.length) return { persist: true };
 
-    if (controlValue.length < persistValue.length) {
+    if (controlValue.substring(0, persistValue.length) !== persistValue) {
       control.setValue(persistValue);
       return { persist: true };
     }

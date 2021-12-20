@@ -12,8 +12,8 @@ import { CommentsPageActions } from '../actions';
   selector: 'lbk-view-comments-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <main *ngIf="user$ | async as user">
-      <div class="container">
+    <main class="mt-6 md:mt-10" *ngIf="user$ | async as user">
+      <div class="container max-w-5xl">
         <!-- comment list -->
         <lbk-comment-list
           (reply)="addReply($event)"
@@ -42,14 +42,6 @@ import { CommentsPageActions } from '../actions';
         (deleted)="onConfirmDelete($event)"
       ></lbk-delete-dialog>
       <!-- end delete dialog -->
-
-      <!-- cancel reply dialog -->
-      <!-- <lbk-dialog-ng-content class="fixed" [open]="true">
-        <lbk-confirm-delete
-          (deleted)="onConfirmDelete($event)"
-        ></lbk-confirm-delete>
-      </lbk-dialog-ng-content> -->
-      <!-- end cancel reply dialog -->
     </main>
   `,
 })
@@ -64,10 +56,6 @@ export class ViewCommentsPageComponent implements OnInit {
     this.user$ = _store.select(fromAuth.selectUser);
     this.deleteId$ = _store.select(fromComments.selectDeleteId);
     this.openDeletePopup$ = this.deleteId$.pipe(map((id) => !!id));
-
-    setTimeout(() => {
-      window.scrollTo(0, document.body.scrollHeight);
-    }, 200);
   }
 
   ngOnInit(): void {

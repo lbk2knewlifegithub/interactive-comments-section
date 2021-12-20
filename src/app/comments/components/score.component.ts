@@ -11,7 +11,11 @@ import {
   selector: 'lbk-score',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="inline-flex gap-2 bg-muted p-2 rounded-lg">
+    <div
+      class="inline-flex items-center gap-2 bg-muted p-2 rounded-lg {{
+        direction === 'vertical' ? 'flex-col' : 'flex-row'
+      }} "
+    >
       <!-- plus -->
       <button
         [disabled]="disablePlus"
@@ -43,6 +47,7 @@ export class ScoreComponent implements OnInit {
   @Input() min = 0;
   @Input() max = 10_000;
   @Input() disable = false;
+  @Input() direction: 'vertical' | 'horizontal' = 'horizontal';
   @Output() up = new EventEmitter<void>();
   @Output() down = new EventEmitter<void>();
   hasBeenUpScore!: boolean;

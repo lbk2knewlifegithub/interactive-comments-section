@@ -68,11 +68,11 @@ input.ng-invalid.ng-touched {
 
 @layer components {
   .badge-primary {
-    @apply bg-primary text-white font-bold py-1 px-2 rounded-md text-xs;
+    @apply bg-primary text-white font-bold py-1 px-2 rounded-sm text-xs md:text-sm;
   }
 
   .btn {
-    @apply inline-block uppercase text-sm tracking-wider text-white font-semibold rounded-lg px-6 py-3 shadow-lg hover:opacity-50 disabled:opacity-25;
+    @apply inline-block uppercase text-sm tracking-wider text-white font-semibold rounded-lg px-6 py-3 shadow-lg hover:opacity-50 disabled:opacity-25 md:px-6;
   }
 
   .btn-primary {
