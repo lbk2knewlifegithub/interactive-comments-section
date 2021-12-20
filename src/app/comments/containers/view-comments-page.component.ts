@@ -13,7 +13,7 @@ import { CommentsPageActions } from '../actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="mt-6 md:mt-10" *ngIf="user$ | async as user">
-      <div class="container max-w-5xl">
+      <div class="container max-w-4xl">
         <!-- comment list -->
         <lbk-comment-list
           (reply)="addReply($event)"
