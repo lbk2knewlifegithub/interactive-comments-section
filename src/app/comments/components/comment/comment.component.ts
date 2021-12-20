@@ -3,10 +3,12 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import { User } from '@lbk/auth/models';
-import { Comment, ReplyDto } from '@lbk/comments/models';
+import { Comment, Edit, ReplyDto } from '@lbk/comments/models';
+import { EditCommentComponent } from '..';
 
 @Component({
   selector: 'lbk-comment',
@@ -18,12 +20,14 @@ export class CommentComponent {
   @Input() myUser!: User;
   @Output() delete = new EventEmitter<number>();
   @Output() reply = new EventEmitter<ReplyDto>();
-
+  @Output() edit = new EventEmitter<Edit>();
   @Output() up = new EventEmitter<number>();
   @Output() down = new EventEmitter<number>();
 
-  openReplyPanel = false;
-  replyContent = '';
+  @ViewChild(EditCommentComponent) editCommentComponent!: EditCommentComponent;
+
+  replyingTo?: string;
+  openEditPanel = false;
 
   get user(): User {
     return this.comment.user;
@@ -33,18 +37,60 @@ export class CommentComponent {
     return this.comment.user.image.png;
   }
 
+  /**
+   * - When User click to edit to a comment,
+   */
+  onEdit(): void {
+    this.openEditPanel = true;
+  }
+
+  /**
+   * - When User click to reply to a comment,
+   */
+  onReply() {
+    if (
+      this.replyingTo &&
+      confirm(
+        `Are you sure you want to cancel your reply to ${this.comment.user.username} ?`
+      )
+    ) {
+      this.replyingTo = undefined;
+      return;
+    }
+
+    this.replyingTo = `@${this.comment.user.username} `;
+  }
+
   get you(): boolean {
     if (!this.myUser) return false;
     return this.comment.user.username === this.myUser.username;
   }
 
-  createReply(content: string) {
-    this.openReplyPanel = false;
+  formatContent(content: string) {
+    return content.substring(content.indexOf(' ')).trim();
+  }
+
+  sendReply(content: string) {
+    this.replyingTo = undefined;
     this.reply.emit({
       myUser: this.myUser,
-      content,
+      content: this.formatContent(content),
       toUserName: this.user.username,
       toCommentId: this.comment.id,
     });
+  }
+
+  get content(): string {
+    const tmp = this.comment.replyingTo;
+    return `${tmp ? '@' + tmp + ' ' : ''}${this.comment.content}`;
+  }
+
+  onUpdate(): void {
+    this.openEditPanel = false;
+    const newContent = this.formatContent(
+      this.editCommentComponent.formControl.value
+    );
+
+    this.edit.emit({ id: this.comment.id, content: newContent });
   }
 }

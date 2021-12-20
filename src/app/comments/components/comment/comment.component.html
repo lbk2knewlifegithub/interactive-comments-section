@@ -20,54 +20,73 @@
       <!-- end created at -->
     </div>
 
-    <!-- content -->
-    <p class="text-muted">
-      <!-- replying to -->
-      <span *ngIf="comment.replyingTo as replyingTo" class="font-black text-primary">
-        @{{ replyingTo }}
-      </span>
-      <!-- end replying to -->
+    <div>
+      <!-- content -->
+      <p *ngIf="!openEditPanel; else editPanel" class="text-muted">
+        <!-- replying to -->
+        <span *ngIf="comment.replyingTo as replyingTo" class="font-black text-primary">
+          @{{ replyingTo }}
+        </span>
+        <!-- end replying to -->
 
-      <span>{{ comment.content }}</span>
-    </p>
-    <!-- end content -->
+        <span>{{ comment.content }}</span>
+      </p>
+      <!-- end content -->
+
+      <!-- textarea display when user click edit button -->
+      <ng-template #editPanel>
+        <lbk-edit-comment [comment]="comment"></lbk-edit-comment>
+      </ng-template>
+      <!-- end textarea display when user click edit button -->
+    </div>
+
+
 
     <div class="flex items-center justify-between">
       <!-- score -->
-      <lbk-score  (up)="up.emit(comment.id)" (down)="down.emit(comment.id)" [score]="comment.score">
+      <lbk-score [disable]="you" (up)="up.emit(comment.id)"
+        (down)="down.emit(comment.id)" [score]="comment.score">
       </lbk-score>
       <!-- end score -->
 
       <ng-container *ngIf="you; else replyButton">
-        <div class="flex gap-4">
-          <!-- delete -->
-          <lbk-button (click)="delete.emit(comment.id)" name="delete"></lbk-button>
-          <!-- end delete -->
+        <!-- update button -->
+        <button (click)="onUpdate()" *ngIf="openEditPanel; else deleteEdit" type="button"
+          class="btn btn-primary">Update</button>
+        <!-- end update button -->
 
-          <!-- edit -->
-          <lbk-button name="edit"></lbk-button>
-          <!-- end edit -->
-        </div>
+        <ng-template #deleteEdit>
+          <div class="flex gap-4">
+            <!-- delete -->
+            <lbk-button (click)="delete.emit(comment.id)" name="delete"></lbk-button>
+            <!-- end delete -->
+
+            <!-- edit -->
+            <lbk-button (click)="onEdit()" name="edit"></lbk-button>
+            <!-- end edit -->
+          </div>
+        </ng-template>
       </ng-container>
 
       <!-- button reply -->
       <ng-template #replyButton>
-        <lbk-button (click)="openReplyPanel = !openReplyPanel" name="reply"></lbk-button>
+        <lbk-button (click)="onReply()" name="reply"></lbk-button>
       </ng-template>
       <!-- end button reply -->
     </div>
   </div>
 
   <!-- reply panel-->
-  <lbk-enter-comment *ngIf="openReplyPanel" (enter)="createReply($event)" class="block mt-4" [user]="myUser">
+  <lbk-enter-comment *ngIf="replyingTo" [preWrite]="replyingTo" [focus]="true" [user]="myUser"
+    (enter)="sendReply($event)" class="block mt-4">
   </lbk-enter-comment>
   <!-- end reply panel-->
 
   <!-- replies -->
   <div class="grid gap-4 pl-4 mt-4 border-l-2 border-gray-200">
     <ng-container *ngFor="let r of comment.replies;index as i">
-      <lbk-comment (up)="up.emit($event)" (down)="down.emit($event)" (reply)="reply.emit($event)"
-        (delete)="delete.emit($event)" [myUser]="myUser" [comment]="r">
+      <lbk-comment (edit)="edit.emit($event)" (up)="up.emit($event)" (down)="down.emit($event)"
+        (reply)="reply.emit($event)" (delete)="delete.emit($event)" [myUser]="myUser" [comment]="r">
       </lbk-comment>
     </ng-container>
   </div>

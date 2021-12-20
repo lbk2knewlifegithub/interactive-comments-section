@@ -1,5 +1,6 @@
 import { CommentsApiActions, CommentsPageActions } from '@lbk/comments/actions';
 import { Comment } from '@lbk/comments/models';
+import { insert } from '@lbk/shared/utils';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 
@@ -22,18 +23,74 @@ export const initialState: State = adapter.getInitialState({});
 
 export const reducer = createReducer(
   initialState,
+
+  /**
+   * - Edit Comment Success
+   */
+
+  on(CommentsApiActions.editCommentSuccess, (state, { edit }) => {
+    const { content, id } = edit;
+
+    // Check in second level
+    for (const c of Object.values(state.entities)) {
+      if (!c) return state;
+      const index = c?.replies.findIndex((reply) => reply.id === id);
+      if (index === -1) continue;
+
+      const tmp = c.replies[index];
+      const newComment: Comment = { ...tmp, content };
+
+      const replies: Comment[] = insert(index, newComment, c.replies);
+
+      return adapter.updateOne(
+        {
+          id: c.id,
+          changes: { replies },
+        },
+        state
+      );
+    }
+
+    // Check in first level
+    const comment = state.entities[id];
+    if (!comment) return state;
+
+    return adapter.updateOne({ id, changes: { content } }, state);
+  }),
+
   /**
    * - Up Score Success
    */
 
   on(CommentsApiActions.upScoreSuccess, (state, { commentId }) => {
+    // Check in replies first
+    for (const c of Object.values(state.entities)) {
+      if (!c) return state;
+      const index = c?.replies.findIndex((reply) => reply.id === commentId);
+      if (index === -1) continue;
+
+      const tmp = c.replies[index];
+      const newComment: Comment = { ...tmp, score: tmp.score + 1 };
+
+      const replies: Comment[] = insert(index, newComment, c.replies);
+
+      return adapter.updateOne(
+        {
+          id: c.id,
+          changes: { replies },
+        },
+        state
+      );
+    }
+
+    // check in first level comments
     const comment = state.entities[commentId];
     if (!comment) return state;
 
     return adapter.updateOne(
       {
         id: commentId,
-        changes: {score: comment.score + 1},
+        changes: { score: comment.score + 1 },
       },
       state
     );
@@ -44,13 +101,36 @@ export const reducer = createReducer(
    */
 
   on(CommentsApiActions.downScoreSuccess, (state, { commentId }) => {
+    // Check in replies first
+    for (const c of Object.values(state.entities)) {
+      if (!c) return state;
+      const index = c?.replies.findIndex((reply) => reply.id === commentId);
+      if (index === -1) continue;
+
+      const tmp = c.replies[index];
+      const newComment: Comment = {
+        ...tmp,
+        score: Math.max(tmp.score + -1, 0),
+      };
+
+      const replies: Comment[] = insert(index, newComment, c.replies);
+
+      return adapter.updateOne(
+        {
+          id: c.id,
+          changes: { replies },
+        },
+        state
+      );
+    }
+
     const comment = state.entities[commentId];
     if (!comment) return state;
 
     return adapter.updateOne(
       {
         id: commentId,
-        changes: {score: Math.max(comment.score - 1, 0)},
+        changes: { score: Math.max(comment.score - 1, 0) },
       },
       state
     );
@@ -62,7 +142,7 @@ export const reducer = createReducer(
   on(CommentsApiActions.addReplySuccess, (state, { comment, commentId }) => {
     // reply sub
     for (const com of Object.values(state.entities)) {
-      if (com?.replies.find((c) => (c.id = commentId))) {
+      if (com?.replies.find((c) => c.id === commentId)) {
         return adapter.updateOne(
           {
             id: com.id,

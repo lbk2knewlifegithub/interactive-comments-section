@@ -1,13 +1,17 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@lbk/auth/models';
+import { persist } from '../validators';
 
 @Component({
   selector: 'lbk-enter-comment',
@@ -19,10 +23,12 @@ import { User } from '@lbk/auth/models';
       class="grid gap-8 bg-white p-4 mb-32"
     >
       <textarea
+        #textarea
         formControlName="comment"
         placeholder="Add a comment.."
         cols="30"
         rows="3"
+        class="resize-none"
       ></textarea>
 
       <div class="flex justify-between items-center">
@@ -45,17 +51,26 @@ import { User } from '@lbk/auth/models';
     </form>
   `,
 })
-export class EnterCommentComponent implements OnInit {
+export class EnterCommentComponent implements OnInit, AfterViewInit {
   @Input() submitButtonName = 'Send';
   @Input() user?: User;
+  @Input() preWrite = '';
+  @Input() focus = false;
+
   @Output() enter = new EventEmitter<string>();
   form!: FormGroup;
 
+  @ViewChild('textarea') textarea!: ElementRef<HTMLTextAreaElement>;
+
   constructor(private readonly _fb: FormBuilder) {}
+
+  ngAfterViewInit(): void {
+    if (this.focus) this.textarea.nativeElement.focus();
+  }
 
   ngOnInit(): void {
     this.form = this._fb.group({
-      comment: ['', [Validators.required]],
+      comment: [this.preWrite, [Validators.required, persist(this.preWrite)]],
     });
   }
 
@@ -68,7 +83,13 @@ export class EnterCommentComponent implements OnInit {
     // double check form validity
     if (this.form.invalid) return;
 
-    this.enter.emit(this.form.value.comment);
+    const comment = this.form.value.comment as string;
+    if (comment === this.preWrite) {
+      alert('Please enter a comment');
+      return;
+    }
+
+    this.enter.emit(comment);
     this.form.reset({ comment: '' });
   }
 }

@@ -6,4 +6,5 @@ export * from './enter-comment.component';
 export * from './delete-popup.component';
 export * from './confirm-delete.component';
 export * from './reply.component';
+export * from './edit-comment.component';
 

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { LoginPageActions } from '@lbk/auth/actions';
 import { User } from '@lbk/auth/models';
 import * as fromAuth from '@lbk/auth/reducers';
-import { Comment, ReplyDto } from '@lbk/comments/models';
+import { Comment, Edit, ReplyDto } from '@lbk/comments/models';
 import * as fromComments from '@lbk/comments/reducers';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
@@ -20,6 +20,7 @@ import { CommentsPageActions } from '../actions';
           (delete)="requestDeleteComment($event)"
           (up)="upScore($event)"
           (down)="downScore($event)"
+          (edit)="editComment($event)"
           [myUser]="user"
           [comments]="(comments$ | async)!"
         ></lbk-comment-list>
@@ -55,9 +56,9 @@ export class ViewCommentsPageComponent implements OnInit {
     this.deleteId$ = _store.select(fromComments.selectDeleteId);
     this.openDeletePopup$ = this.deleteId$.pipe(map((id) => !!id));
 
-    // setTimeout(() => {
-    //   window.scrollTo(0, document.body.scrollHeight);
-    // }, 200);
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    }, 200);
   }
 
   ngOnInit(): void {
@@ -99,5 +100,9 @@ export class ViewCommentsPageComponent implements OnInit {
 
   downScore(commentId: number) {
     this._store.dispatch(CommentsPageActions.downScore({ commentId }));
+  }
+
+  editComment(edit: Edit) {
+    this._store.dispatch(CommentsPageActions.editComment({ edit }));
   }
 }

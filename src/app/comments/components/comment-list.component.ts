@@ -6,7 +6,7 @@ import {
   Output
 } from '@angular/core';
 import { User } from '@lbk/auth/models';
-import { Comment, ReplyDto } from '../models';
+import { Comment, Edit, ReplyDto } from '../models';
 
 @Component({
   selector: 'lbk-comment-list',
@@ -19,6 +19,7 @@ import { Comment, ReplyDto } from '../models';
           (delete)="delete.emit($event)"
           (up)="up.emit($event)"
           (down)="down.emit($event)"
+          (edit)="edit.emit($event)"
           [myUser]="myUser"
           [comment]="comment"
         ></lbk-comment>
@@ -33,6 +34,7 @@ export class CommentListComponent {
   @Output() reply = new EventEmitter<ReplyDto>();
   @Output() up = new EventEmitter<number>();
   @Output() down = new EventEmitter<number>();
+  @Output() edit = new EventEmitter<Edit>();
 
   identifyComment(index: number, comment: Comment) {
     return comment.id;

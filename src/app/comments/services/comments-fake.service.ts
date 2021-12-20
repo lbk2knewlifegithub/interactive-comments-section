@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '@lbk/auth/models';
-import { Comment, ReplyDto } from '@lbk/comments/models';
+import { Comment, Edit, ReplyDto } from '@lbk/comments/models';
 import { fakeData } from '@lbk/comments/services/data';
 import { Observable, of } from 'rxjs';
 import { CommentsService } from './comments.service';
@@ -72,6 +72,10 @@ export class CommentsServiceFake implements CommentsService {
     };
 
     return of({ commentId: replyDto.toCommentId, comment });
+  }
+
+  editComment(edit: Edit): Observable<boolean> {
+    return of(true);
   }
 
   upScore(commentId: number): Observable<boolean> {

@@ -13,9 +13,11 @@ import {
   DeletePopupComponent,
   EnterCommentComponent,
   ReplyComponent,
-  ScoreComponent
+  ScoreComponent,
+  EditCommentComponent
 } from './components';
 import { ViewCommentsPageComponent } from './containers';
+import { FocusDirective } from './directives';
 import { CommentEffects } from './effects';
 
 const COMPONENTS = [
@@ -26,7 +28,9 @@ const COMPONENTS = [
   EnterCommentComponent,
   DeletePopupComponent,
   ConfirmDeleteComponent,
-  ReplyComponent
+  ReplyComponent,
+  EditCommentComponent,
+  FocusDirective
 ];
 
 const CONTAINERS = [ViewCommentsPageComponent];

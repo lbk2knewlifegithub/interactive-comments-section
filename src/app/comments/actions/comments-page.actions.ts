@@ -1,6 +1,6 @@
 import { User } from '@lbk/auth/models';
 import { createAction, props } from '@ngrx/store';
-import { ReplyDto } from '../models';
+import { Edit, ReplyDto } from '@lbk/comments/models';
 
 export const enter = createAction('[Comments Page] Enter');
 
@@ -24,6 +24,11 @@ export const addReply = createAction(
   props<{ replyDto: ReplyDto }>()
 );
 
+export const editComment = createAction(
+  '[Comments Page] Edit Comment',
+  props<{ edit: Edit }>()
+);
+
 export const upScore = createAction(
   '[Comments Page] Up Score ',
   props<{ commentId: number }>()
@@ -33,3 +38,4 @@ export const downScore = createAction(
   '[Comments Page] Down Score ',
   props<{ commentId: number }>()
 );
+

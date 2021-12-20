@@ -1,4 +1,4 @@
-import { Comment } from '@lbk/comments/models';
+import { Comment, Edit } from '@lbk/comments/models';
 import { createAction, props } from '@ngrx/store';
 
 /**
@@ -46,11 +46,24 @@ export const addCommentFailure = createAction(
  */
 export const addReplySuccess = createAction(
   '[Comments/API] Add Reply Success',
-  props<{ commentId: number, comment: Comment }>()
+  props<{ commentId: number; comment: Comment }>()
 );
 
 export const addReplyFailure = createAction(
   '[Comments/API] Add Reply Failure',
+  props<{ error: any }>()
+);
+
+/**
+ * - Edit Comment
+ */
+export const editCommentSuccess = createAction(
+  '[Comments/API] Edit Comment Success',
+  props<{ edit: Edit }>()
+);
+
+export const editCommentFailure = createAction(
+  '[Comments/API] Edit Comment Failure',
   props<{ error: any }>()
 );
 
@@ -66,7 +79,6 @@ export const upScoreFailure = createAction(
   '[Comments/API] Up Score Failure',
   props<{ error: any }>()
 );
-
 
 /**
  * - Down Score

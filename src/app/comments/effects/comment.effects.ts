@@ -68,6 +68,20 @@ export class CommentEffects {
     )
   );
 
+  editComment$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(CommentsPageActions.editComment),
+      switchMap(({ edit }) =>
+        this._commentsService.editComment(edit).pipe(
+          map((_) => CommentsApiActions.editCommentSuccess({ edit })),
+          catchError((error) =>
+            of(CommentsApiActions.editCommentFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
   upScore$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.upScore),
