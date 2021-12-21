@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { CommentsApiActions, CommentsPageActions } from '@lbk/comments/actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { CommentsStorageService } from '../services/comments-storage.service';
 import { CommentsService } from '../services/comments.service';
 
@@ -11,7 +11,7 @@ export class CommentEffects {
   loadComments$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.enter),
-      switchMap(() =>
+      exhaustMap(() =>
         this._commentsService.getComments().pipe(
           map((comments) =>
             CommentsApiActions.loadCommentsSuccess({ comments })
@@ -27,7 +27,7 @@ export class CommentEffects {
   deleteComment$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.deleteComment),
-      switchMap(({ id }) =>
+      exhaustMap(({ id }) =>
         this._commentsService.deleteComment(id).pipe(
           map(() => CommentsApiActions.deleteCommentSuccess({ id })),
           catchError((error) =>
@@ -41,7 +41,7 @@ export class CommentEffects {
   addComment$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.addComment),
-      switchMap(({ user, content }) =>
+      exhaustMap(({ user, content }) =>
         this._commentsService.addComment(user, content).pipe(
           map((comment) => CommentsApiActions.addCommentSuccess({ comment })),
           catchError((error) =>
@@ -55,7 +55,7 @@ export class CommentEffects {
   addReply$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.addReply),
-      switchMap(({ replyDto }) =>
+      exhaustMap(({ replyDto }) =>
         this._commentsService.addReply(replyDto).pipe(
           map(({ commentId, comment }) =>
             CommentsApiActions.addReplySuccess({ comment, commentId })
@@ -71,7 +71,7 @@ export class CommentEffects {
   editComment$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.editComment),
-      switchMap(({ edit }) =>
+      exhaustMap(({ edit }) =>
         this._commentsService.editComment(edit).pipe(
           map((_) => CommentsApiActions.editCommentSuccess({ edit })),
           catchError((error) =>
@@ -85,7 +85,7 @@ export class CommentEffects {
   upScore$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.upScore),
-      switchMap(({ commentId }) =>
+      exhaustMap(({ commentId }) =>
         this._commentsService.upScore(commentId).pipe(
           map((_) => CommentsApiActions.upScoreSuccess({ commentId })),
           catchError((error) =>
@@ -99,7 +99,7 @@ export class CommentEffects {
   downScore$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CommentsPageActions.downScore),
-      switchMap(({ commentId }) =>
+      exhaustMap(({ commentId }) =>
         this._commentsService.downScore(commentId).pipe(
           map((_) => CommentsApiActions.downScoreSuccess({ commentId })),
           catchError((error) =>
