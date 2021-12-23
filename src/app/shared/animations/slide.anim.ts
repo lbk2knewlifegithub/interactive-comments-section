@@ -20,7 +20,7 @@ export function slideIn(option?: CustomAnimation) {
 
 export function slideOut(option?: CustomAnimation) {
   option = { ...DefaultCustomAnimation, ...option };
-  const { name, delayEnter, duration, timing } = option;
+  const { name, delayLeave, duration, timing } = option;
   return trigger(name || 'slideOut', [
     transition(
       ':leave',
@@ -29,7 +29,7 @@ export function slideOut(option?: CustomAnimation) {
         style({ opacity: 0, transform: 'translateX(100%)' }),
       ],
       {
-        params: { delay: delayEnter, timing, duration },
+        params: { delay: delayLeave, timing, duration },
       }
     ),
   ]);

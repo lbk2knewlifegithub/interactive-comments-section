@@ -50,7 +50,7 @@ import { Comment, Edit, ReplyDto } from '../models';
         ),
       ]),
     ]),
-    slideOut({ delayLeave: 600 }),
+    slideOut({ delayLeave: 1200 }),
     slideIn({ delayEnter: 100 }),
   ],
 })
