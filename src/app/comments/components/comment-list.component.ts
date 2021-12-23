@@ -14,7 +14,7 @@ import {
   Output
 } from '@angular/core';
 import { User } from '@lbk/auth/models';
-import { slideOut } from '@lbk/shared/animations';
+import { slideIn, slideOut } from '@lbk/shared/animations';
 import { Comment, Edit, ReplyDto } from '../models';
 
 @Component({
@@ -25,6 +25,7 @@ import { Comment, Edit, ReplyDto } from '../models';
       <ng-container *ngFor="let comment of comments; trackBy: identifyComment">
         <lbk-comment
           @slideOut
+          @slideIn
           [myUser]="myUser"
           [comment]="comment"
           (reply)="reply.emit($event)"
@@ -42,14 +43,15 @@ import { Comment, Edit, ReplyDto } from '../models';
         query(
           ':enter',
           [
-            style({ opacity: 0.2, transform: 'translateY(-100%)' }),
+            style({ opacity: 0.1, transform: 'translateY(-100%)' }),
             stagger(200, [animate('0.5s')]),
           ],
           { optional: true }
         ),
       ]),
     ]),
-    slideOut({ delayLeave: 1000 }),
+    slideOut({ delayLeave: 600 }),
+    slideIn({ delayEnter: 100 }),
   ],
 })
 export class CommentListComponent {

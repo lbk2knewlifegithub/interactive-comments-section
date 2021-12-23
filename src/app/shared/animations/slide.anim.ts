@@ -11,7 +11,7 @@ export function slideIn(option?: CustomAnimation) {
   option = { ...DefaultCustomAnimation, ...option };
   const { name, delayEnter, delayLeave, duration, timing } = option;
   return trigger(name || 'slideIn', [
-    state('void', style({ opacity: 0, transform: 'translateY(100%)' })),
+    state('void', style({ opacity: 0, transform: 'translateX(-100%)' })),
     transition(':enter', [animate('{{duration}}ms {{delay}}ms {{timing}}')], {
       params: { delay: delayEnter, timing, duration },
     }),
@@ -20,7 +20,7 @@ export function slideIn(option?: CustomAnimation) {
 
 export function slideOut(option?: CustomAnimation) {
   option = { ...DefaultCustomAnimation, ...option };
-  const { name, delayLeave, duration, timing } = option;
+  const { name, delayEnter, duration, timing } = option;
   return trigger(name || 'slideOut', [
     transition(
       ':leave',
@@ -29,7 +29,7 @@ export function slideOut(option?: CustomAnimation) {
         style({ opacity: 0, transform: 'translateX(100%)' }),
       ],
       {
-        params: { delay: delayLeave, timing, duration },
+        params: { delay: delayEnter, timing, duration },
       }
     ),
   ]);
