@@ -1,4 +1,12 @@
 import {
+  animate,
+  query,
+  stagger,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
+import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -6,15 +14,17 @@ import {
   Output
 } from '@angular/core';
 import { User } from '@lbk/auth/models';
+import { slideOut } from '@lbk/shared/animations';
 import { Comment, Edit, ReplyDto } from '../models';
 
 @Component({
   selector: 'lbk-comment-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="grid gap-4">
+    <div @listAnimation class="grid gap-4">
       <ng-container *ngFor="let comment of comments; trackBy: identifyComment">
         <lbk-comment
+          @slideOut
           [myUser]="myUser"
           [comment]="comment"
           (reply)="reply.emit($event)"
@@ -26,6 +36,21 @@ import { Comment, Edit, ReplyDto } from '../models';
       </ng-container>
     </div>
   `,
+  animations: [
+    trigger('listAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0.2, transform: 'translateY(-100%)' }),
+            stagger(200, [animate('0.5s')]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    slideOut({ delayLeave: 1000 }),
+  ],
 })
 export class CommentListComponent {
   @Input() comments!: Comment[];
@@ -39,5 +64,4 @@ export class CommentListComponent {
   identifyComment(index: number, comment: Comment) {
     return comment.id;
   }
-
 }

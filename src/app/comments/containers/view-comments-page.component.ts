@@ -4,6 +4,7 @@ import { User } from '@lbk/auth/models';
 import * as fromAuth from '@lbk/auth/reducers';
 import { Comment, Edit, ReplyDto } from '@lbk/comments/models';
 import * as fromComments from '@lbk/comments/reducers';
+import { slideIn } from '@lbk/shared/animations';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
 import { CommentsPageActions } from '../actions';
@@ -28,6 +29,7 @@ import { CommentsPageActions } from '../actions';
 
         <!-- enter comment -->
         <lbk-enter-comment
+          @slideIn
           (enter)="addComment($event)"
           class="block mt-10 mb-40"
           [user]="user"
@@ -44,6 +46,7 @@ import { CommentsPageActions } from '../actions';
       <!-- end delete dialog -->
     </main>
   `,
+  animations: [slideIn({ delayEnter: 1000 })],
 })
 export class ViewCommentsPageComponent implements OnInit {
   comments$!: Observable<Comment[]>;
